@@ -1,0 +1,168 @@
+\documentclass{article}
+\usepackage[letterpaper,margin=0.32in,top=0.28in,bottom=0.24in]{geometry}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{multicol}
+\usepackage{microtype}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.12pt}
+\setlength{\columnsep}{8pt}
+\setlength{\abovedisplayskip}{1pt}
+\setlength{\belowdisplayskip}{1pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+\newcommand{\sect}[1]{\par\vspace{1.05pt}{\fontsize{8}{9}\selectfont\textbf{#1}}\par\vspace{0.15pt}}
+\newcommand{\kw}[1]{\textbf{#1}}
+\begin{document}
+\noindent{\fontsize{8}{9}\selectfont\textbf{IEDA 5270 Midterm 2 --- Casella \& Berger}
+\hfill\textbf{3.6, 4.7, 5.1--5.6, 6.3, 7.1, 7.2.1--2, 7.3.1--2}}\par
+\vspace{1pt}\hrule\vspace{1.5pt}
+\fontsize{8.9}{10.4}\selectfont
+\begin{multicols}{2}
+
+\sect{1. Inequalities (3.6, 4.7)}
+These bound a probability or an expectation by something you can compute. Use them when the exact distribution is unavailable.
+
+\kw{Markov.} If $X\ge 0$ and $r>0$, then $P(X\ge r)\le EX/r$. Proof: $EX\ge E[X\,1_{\{X\ge r\}}]\ge r\,P(X\ge r)$.
+
+\kw{Chebyshev.} $P(|X-\mu|\ge r)\le \sigma^2/r^2$. Apply Markov to $(X-\mu)^2$. For an iid sample, $\mathrm{Var}(\bar X)=\sigma^2/n$, so $P(|\bar X-\mu|\ge\epsilon)\le\sigma^2/(n\epsilon^2)$.
+
+\kw{Relative error (HW2 coin).} $X_i$ Bernoulli$(p)$, $p\ge a\in(0,1)$, $\tilde p=\bar X$. Want $P(|\tilde p-p|\ge\epsilon p)\le\delta$. Chebyshev:
+\[
+P\le\frac{p(1-p)}{n\epsilon^2 p^2}=\frac{1-p}{n\epsilon^2 p}.
+\]
+$(1-p)/p$ decreases in $p$, so its worst value on $p\ge a$ is at $p=a$. Thus the bound is $(1-a)/(n a\epsilon^2)$. Any
+\[
+n\ge\frac{1-a}{a\epsilon^2\delta}
+\]
+works. The information $p\ge a$ replaces the cruder $p(1-p)\le 1/4$.
+
+\kw{Jensen (functional).} If $\phi$ is convex, $\phi(EX)\le E\phi(X)$. If $\phi$ is strictly convex, equality holds iff $X$ is constant a.s. Concave $\phi$ reverses the inequality. Proof: convexity puts a line under the graph, $\phi(x)\ge\phi(\mu)+a(x-\mu)$, with $\mu=EX$ and $a=\phi'(\mu)$ when $\phi$ is differentiable. Substitute $X$ and take expectations. The term $aE(X-\mu)$ is $0$, so $E\phi(X)\ge\phi(EX)$. Uses: $\mathrm{Var}\,X=EX^2-(EX)^2\ge 0$ because $t\mapsto t^2$ is convex; $E\log X\le\log EX$ because $\log$ is concave.
+
+\kw{AM--GM from Jensen.} For $x_i>0$, $\log$ concave gives $\log\bigl((x_1+\cdots+x_n)/n\bigr)\ge(\log x_1+\cdots+\log x_n)/n=\log(x_1\cdots x_n)^{1/n}$. Exponentiate: the arithmetic mean is at least the geometric mean, with equality iff all $x_i$ agree.
+
+\kw{Moments get stronger.} For $0<s<r$, $(E|X|^s)^{1/s}\le(E|X|^r)^{1/r}$, so $E|X|^r<\infty$ implies $E|X|^s<\infty$. Proof: $r/s>1$, so $y\mapsto y^{r/s}$ is convex on $[0,\infty)$. Jensen on $Y=|X|^s$ gives $(E|X|^s)^{r/s}\le E|X|^r$. Raise both sides to $s/r$, then to $1/s$.
+
+\kw{Cauchy--Schwarz.} $E|XY|\le\sqrt{EX^2\,EY^2}$. Proof: for every real $t$, $0\le E(|X|-t|Y|)^2=EX^2-2t\,E|XY|+t^2 EY^2$. If $EY^2>0$, choose $t=E|XY|/EY^2$. The quadratic in $t$ is nonnegative for every $t$, so its discriminant is $\le 0$: $(E|XY|)^2\le EX^2\,EY^2$. Apply the same inequality to $X-\mu_X$ and $Y-\mu_Y$ to get $|\mathrm{Cov}(X,Y)|\le\sigma_X\sigma_Y$, hence $\rho\in[-1,1]$. Equality iff $Y=a+bX$ a.s.
+
+\kw{H\"older.} For $p,q>1$ with $1/p+1/q=1$, $E|XY|\le\|X\|_p\|Y\|_q$, where $\|X\|_p=(E|X|^p)^{1/p}$. Proof: Young's inequality from the concavity of $\log$, $ab\le a^p/p+b^q/q$ for $a,b\ge 0$. Normalize $U=|X|/\|X\|_p$ and $V=|Y|/\|Y\|_q$ (the claim is trivial if either norm is $0$). Then $E|UV|\le E(U^p/p+V^q/q)=1/p+1/q=1$, which is $E|XY|\le\|X\|_p\|Y\|_q$. Cauchy--Schwarz is the case $p=q=2$.
+
+\kw{Minkowski.} For $p\ge 1$, $\|X+Y\|_p\le\|X\|_p+\|Y\|_p$. Proof: $|X+Y|^p\le|X|\,|X+Y|^{p-1}+|Y|\,|X+Y|^{p-1}$. Take expectations and apply H\"older to each product, with conjugate $q=p/(p-1)$, so $(p-1)q=p$. Each term is at most $\|X\|_p\|X+Y\|_p^{p/q}$ or the same with $Y$. Thus $E|X+Y|^p\le(\|X\|_p+\|Y\|_p)\,(E|X+Y|^p)^{1/q}$. Divide by $(E|X+Y|^p)^{1/q}$. Since $1-1/q=1/p$, the left side becomes $\|X+Y\|_p$.
+
+\kw{Tail identities.} Nonnegative integer-valued: $EX=\sum_{k\ge 1}P(X\ge k)$. Nonnegative continuous: $EX=\int_0^\infty(1-F(x))\,dx$, and $EX^k=\int_0^\infty kx^{k-1}(1-F(x))\,dx$.
+
+\sect{2. A random sample (5.1--5.4)}
+A \kw{random sample} is $X_1,\ldots,X_n$ i.i.d.\ with pdf or pmf $f(x\mid\theta)$. A \kw{statistic} is any function of the data alone (no unknown $\theta$ left inside). Its distribution is the \kw{sampling distribution}. An estimator is a statistic used as a guess for $\theta$; the number you get from data is the estimate.
+
+\kw{Sample mean and variance.} $\bar X=n^{-1}\sum X_i$, $S^2=(n-1)^{-1}\sum(X_i-\bar X)^2$. Always $E\bar X=\mu$ and $\mathrm{Var}(\bar X)=\sigma^2/n$. If the variance exists, $ES^2=\sigma^2$ (the $n-1$ is what makes it unbiased). The version with $n$ in the denominator is biased low.
+
+\kw{Sums.} The mgf of an independent sum is the product of the mgfs. Concretely: independent Poissons add their $\lambda$; independent normals add means and variances; $\mathrm{Gamma}(\alpha_i,\beta)$ with the \emph{same} scale $\beta$ add their shapes; $n$ i.i.d.\ $\mathrm{Exp}(\beta)$ (mean $\beta$) sum to $\mathrm{Gamma}(n,\beta)$.
+
+\kw{Normal sample.} If $X_i$ i.i.d.\ $N(\mu,\sigma^2)$, then $\bar X\sim N(\mu,\sigma^2/n)$, $(n-1)S^2/\sigma^2\sim\chi^2_{n-1}$, and $\bar X$ is independent of $S^2$. Therefore
+\[
+\frac{\sqrt n\,(\bar X-\mu)}{S}\sim t_{n-1}.
+\]
+Building blocks: $Z_i$ i.i.d.\ $N(0,1)$ give $\sum Z_i^2\sim\chi^2_n$; $Z/\sqrt{V/\nu}\sim t_\nu$ if $V\sim\chi^2_\nu$ is independent of $Z$; $(U/\nu_1)/(V/\nu_2)\sim F_{\nu_1,\nu_2}$ for independent chi-squares.
+
+\kw{Order statistics.} Write $X_{(1)}<\cdots<X_{(n)}$. On the region $x_1<\cdots<x_n$ the joint density is $n!\prod f(x_i)$. The $k$th has density
+\[
+f_{X_{(k)}}(x)=\frac{n!}{(k-1)!(n-k)!}F(x)^{k-1}(1-F(x))^{n-k}f(x).
+\]
+For $\mathrm{Unif}(0,1)$, $X_{(k)}\sim\mathrm{Beta}(k,\,n-k+1)$. The sample max has cdf $F^n$; the sample min has cdf $1-(1-F)^n$.
+
+\sect{3. Convergence (5.5)}
+Four modes. $X_n\to X$ \kw{in probability} if $P(|X_n-X|>\epsilon)\to 0$ for every $\epsilon>0$. \kw{Almost surely} if $P(X_n\to X)=1$. \kw{In distribution} if $F_{X_n}(t)\to F_X(t)$ at every continuity point of $F_X$ (equivalently $Eg(X_n)\to Eg(X)$ for every bounded continuous $g$). \kw{In $L^p$} ($p\ge 1$) if $E|X_n-X|^p\to 0$.
+
+\kw{What implies what.} Almost sure $\Rightarrow$ in probability $\Rightarrow$ in distribution. Also $L^p\Rightarrow$ in probability, by Markov: $P(|X_n-X|\ge\epsilon)\le E|X_n-X|^p/\epsilon^p$. The reverse arrows are false.
+
+\kw{Counters.} $L^p$ does not give almost sure: independent $X_n=1$ with probability $1/n$ and $0$ otherwise. Then $E|X_n|^p=1/n\to 0$, but $\sum P(X_n\neq 0)=\infty$, so $X_n=1$ infinitely often. Almost sure does not give $L^p$: independent $X_n=2^n$ with probability $2^{-n}$, else $0$. Then $\sum 2^{-n}<\infty$, so $X_n\to 0$ a.s., but $E|X_n|=1\not\to 0$. (The homework display $X_n=n^2$ with probability $2^{-n}$ \emph{does} go to $0$ in $L^p$, because $n^{2p}/2^n\to 0$. The height has to be exponential.)
+
+\kw{Tools.} Continuous mapping: $g$ continuous and $X_n\to X$ in distribution, probability, or a.s.\ $\Rightarrow$ $g(X_n)\to g(X)$ in the same mode. Slutsky: $X_n\to_d X$ and $Y_n\to_p c$ give $X_n+Y_n\to_d X+c$, $X_n Y_n\to_d cX$, and $X_n/Y_n\to_d X/c$ if $c\neq 0$.
+
+\kw{LLN and CLT.} Iid with finite mean: $\bar X\to_p\mu$ (WLLN); with finite mean, $\bar X\to\mu$ almost surely (SLLN). Iid with mean $\mu$ and variance $\sigma^2\in(0,\infty)$:
+\[
+\sqrt n\,(\bar X-\mu)/\sigma\ \to_d\ N(0,1).
+\]
+
+\kw{Delta method.} If $\sqrt n\,(Y_n-\theta)\to_d N(0,\sigma^2)$ and $g'(\theta)\neq 0$, then
+\[
+\sqrt n\bigl(g(Y_n)-g(\theta)\bigr)\to_d N\bigl(0,\ \sigma^2[g'(\theta)]^2\bigr).
+\]
+If $g'(\theta)=0$ but $g''(\theta)\neq 0$, the $\sqrt n$ rate is too fast and the limit is a chi-square, not a normal:
+\[
+n\bigl(g(Y_n)-g(\theta)\bigr)\to_d \tfrac12\sigma^2 g''(\theta)\,\chi^2_1.
+\]
+Bernoulli variance: $g(p)=p(1-p)$, $g'=1-2p$, $g''=-2$, and $\sigma^2=p(1-p)$. For $p\neq 1/2$ the normal limit has variance $(1-2p)^2 p(1-p)$. For $p=1/2$, $g'=0$, so $n\bigl(Y_n(1-Y_n)-1/4\bigr)\to_d -\tfrac14\chi^2_1$.
+
+\sect{4. Drawing a sample (5.6)}
+\kw{Inverse transform.} Draw $U\sim\mathrm{Unif}(0,1)$ and set $X=F^{-1}(U)$, where $F^{-1}(u)=\inf\{x:F(x)\ge u\}$. If $F$ is continuous and strictly increasing, this is the ordinary inverse, and $F(X)\sim\mathrm{Unif}(0,1)$.
+
+\kw{Left-truncated normal} $N^+(\mu,c,\sigma^2)$, density proportional to a $N(\mu,\sigma^2)$ density on $[c,\infty)$. With $\delta=(c-\mu)/\sigma$,
+\[
+F(x)=\frac{\Phi((x-\mu)/\sigma)-\Phi(\delta)}{1-\Phi(\delta)},\quad x\ge c,
+\]
+\[
+F^{-1}(u)=\mu+\sigma\,\Phi^{-1}\!\bigl(\Phi(\delta)+u(1-\Phi(\delta))\bigr).
+\]
+
+\kw{Accept--reject.} Target $f$, easy proposal $g$, with $f\le Mg$. Draw $Y\sim g$ and $U\sim\mathrm{Unif}(0,1)$; accept $Y$ if $U\le f(Y)/(Mg(Y))$. The acceptance probability is $1/M$, so the best $g$ (or best parameter inside a family) is the one with the smallest $M=\sup f/g$. For a left-truncated normal and $g(x)=\alpha e^{-\alpha(x-c)}1_{\{x\ge c\}}$, look at $\log(f/g)$. Its derivative is $-(x-\mu)/\sigma^2+\alpha$, so the ratio peaks at $x^\star=\mu+\alpha\sigma^2$ when that point is $\ge c$, and at the boundary $x=c$ otherwise. Compute $M(\alpha)$ in each case and minimize it in $\alpha$.
+
+\sect{5. Likelihood principle (6.3)}
+The \kw{likelihood} is $L(\theta\mid x)=f(x\mid\theta)$ viewed as a function of $\theta$ with the data held fixed. Two likelihoods that differ by a factor not depending on $\theta$ carry the same information about $\theta$.
+
+\kw{The principle.} If sample $x$ from one experiment and sample $y$ from another satisfy $L(\theta\mid x)=c(x,y)L(\theta\mid y)$ with $c$ free of $\theta$, then any conclusion about $\theta$ should be the same from $x$ and from $y$.
+
+\kw{Why it is forced.} The sufficiency principle says a sufficient statistic is enough. The conditionality principle says that if a coin-flip independent of $\theta$ chooses which experiment you run, you should condition on the experiment that actually happened. Birnbaum's theorem: those two principles together imply the likelihood principle.
+
+\kw{Binomial vs negative binomial.} Fixed $n$, observe $s$ successes: likelihood $\propto\theta^s(1-\theta)^{n-s}$. Fixed $s$ successes, observe the number of trials: same kernel in $\theta$. The likelihood principle says the inference for $\theta$ is the same. A frequentist $p$-value can still differ, because it uses the whole sample space of the experiment that was planned, not only the observed likelihood.
+
+\sect{6. Finding an estimator (7.1, 7.2.1--2)}
+A point estimator is a statistic $W(X_1,\ldots,X_n)$ meant to be close to $\theta$. ``Close'' is measured in Section 7.
+
+\kw{Method of moments.} Compute the first $k$ population moments $E_\theta X^j$ ($k=\dim\theta$). Set them equal to the sample moments $n^{-1}\sum X_i^j$ and solve for $\theta$. One parameter usually means solve $\bar X=\mu(\theta)$. The estimator is consistent when $\mu$ is nicely invertible, because $\bar X\to_p\mu(\theta)$ and the continuous-mapping theorem applies. It can fall outside the parameter space, and it ignores the rest of the likelihood.
+
+\kw{Maximum likelihood.} Maximize $L(\theta)=\prod_i f(X_i\mid\theta)$, or equivalently $\ell(\theta)=\sum\log f(X_i\mid\theta)$. Differentiate, solve $\partial\ell/\partial\theta=0$, and check it is a maximum (second derivative negative, or the log likelihood goes to $-\infty$ at the boundary). If the \emph{support depends on $\theta$} (Uniform$(0,\theta)$, shifted exponential), do not trust the derivative: the maximum is usually at the boundary. For $\mathrm{Unif}(0,\theta)$ the MLE is $X_{(n)}$.
+
+\kw{Invariance.} If $\widehat\theta$ is the MLE of $\theta$ and $\tau$ is any function, the MLE of $\tau(\theta)$ is $\tau(\widehat\theta)$. If $\tau$ is not one-to-one, use the largest likelihood among $\theta$ with $\tau(\theta)=\eta$.
+
+\kw{Pareto recipe (HW2).} $f(x\mid\alpha)=\alpha x^{-(\alpha+1)}1_{\{x\ge 1\}}$. Then $\ell=n\log\alpha-(\alpha+1)\sum\log X_i$, so
+\[
+\widehat\alpha=\frac{n}{\sum_{i=1}^n\log X_i}.
+\]
+($\log X_i$ is exponential with mean $1/\alpha$, so $E\widehat\alpha=n\alpha/(n-1)$: the MLE is biased.)
+
+\kw{Usual MLEs.} Bernoulli or Binomial proportion: $\bar X$. Poisson $\lambda$: $\bar X$. Normal mean, $\sigma$ known or not: $\bar X$. Normal variance: $\sum(X_i-\bar X)^2/n$ (divide by $n-1$ to unbias it). Exponential mean $\beta$: $\bar X$.
+
+\sect{7. Is the estimator good? (7.3.1--2)}
+\kw{MSE.} $\mathrm{MSE}(\theta)=E_\theta(W-\theta)^2=\mathrm{Var}_\theta(W)+(\mathrm{Bias})^2$, with $\mathrm{Bias}=E_\theta W-\theta$. Unbiased means the bias term is $0$, so MSE equals variance. To compare two estimators, plot or subtract these functions of $\theta$. There is no estimator with smallest MSE at every $\theta$: the constant $W\equiv\theta_0$ has MSE $0$ at $\theta_0$ and is terrible elsewhere. Bernoulli MOM and MLE are both $\bar X$, with $\mathrm{MSE}=\theta(1-\theta)/n$.
+
+\kw{Best unbiased.} Among estimators with $EW=\tau(\theta)$ for every $\theta$, a best one has the smallest variance at every $\theta$.
+
+\kw{Cram\'er--Rao.} Assume the support does not depend on $\theta$ and you may differentiate under the integral. For unbiased $W$ of $\tau(\theta)$,
+\[
+\mathrm{Var}_\theta(W)\ \ge\ \frac{[\tau'(\theta)]^2}{I_n(\theta)}.
+\]
+For $\tau(\theta)=\theta$ the numerator is $1$. Fisher information of one observation, and of the whole iid sample, is
+\[
+I_1(\theta)=E_\theta\Bigl(\frac{\partial}{\partial\theta}\log f(X\mid\theta)\Bigr)^2
+=-E_\theta\Bigl(\frac{\partial^2}{\partial\theta^2}\log f(X\mid\theta)\Bigr),
+\]
+and $I_n(\theta)=n I_1(\theta)$. The two formulas agree when the regularity conditions hold; the second is usually the one you compute. Also $E(\partial\ell/\partial\theta)=0$.
+
+\kw{When the bound is achieved.} Equality holds iff the score is linear in the estimator:
+\[
+\frac{\partial}{\partial\theta}\log L(\theta\mid x)=a(\theta)\bigl(W(x)-\tau(\theta)\bigr).
+\]
+Then $W$ is best unbiased for $\tau(\theta)$. Exponential families usually attain the bound for the mean of their sufficient statistic. If the support depends on $\theta$, CRLB does not apply; do not quote it for $\mathrm{Unif}(0,\theta)$.
+
+\kw{Pareto information.} $\partial^2\ell/\partial\alpha^2=-n/\alpha^2$, so $I_n(\alpha)=n/\alpha^2$ and any unbiased estimator of $\alpha$ has variance at least $\alpha^2/n$. The MLE $n/\sum\log X_i$ does not attain it: it is biased, with mean $n\alpha/(n-1)$.
+
+\kw{One-parameter informations $I_1$.} Bernoulli$(p)$: $1/(p(1-p))$. Poisson$(\lambda)$: $1/\lambda$. $N(\mu,\sigma^2)$ for $\mu$, $\sigma$ known: $1/\sigma^2$. Exponential with mean $\beta$: $1/\beta^2$. Pareto shape $\alpha$ on $[1,\infty)$: $1/\alpha^2$. Multiply by $n$ for the sample. The unbiased estimator $(n-1)/\sum\log X_i$ of the Pareto shape has variance $\alpha^2/(n-2)$ for $n>2$, which sits above $\alpha^2/n$.
+
+\kw{Scaling an estimator.} If $EW=\theta$ and you use $aW$, then bias is $(a-1)\theta$ and $\mathrm{MSE}=a^2\mathrm{Var}(W)+(a-1)^2\theta^2$. This is the comparison when MOM and MLE differ by a factor such as $n/(n-1)$.
+
+\kw{A question, part by part.} (i)~A probability bound with a sample size: Markov or Chebyshev, and check whether the bound gets worse at an endpoint such as $p=a$. (ii)~A convergence arrow: quote the chain, or give one of the two counters; if a derivative appears, check whether it is zero before using the ordinary delta method. (iii)~``Simulate'': inverse cdf if you can invert $F$; accept--reject if you are handed a proposal, and optimize the proposal by minimizing $\sup f/g$. (iv)~``Find an estimator'': MOM is one moment equation; MLE is the log likelihood, with a boundary check. (v)~``Which is better'': write bias and variance, add them. (vi)~``How good can an unbiased estimator be'': $1/I_n(\theta)$, after checking the support does not depend on $\theta$.
+
+\end{multicols}
+\end{document}

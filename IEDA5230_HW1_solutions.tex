@@ -1,0 +1,126 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+
+\title{\textbf{Homework 1}}
+\author{Vasilii Slyshkin \\ \texttt{vslyshkin@connect.ust.hk}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Problem 1}
+
+Let $A\in\mathbb{R}^{m\times n}$ be given, and define
+\[
+B := \bigl\{ b\in\mathbb{R}^m : \{x : Ax=b,\, x\ge 0\}\ \text{is nonempty}\bigr\}.
+\]
+Equivalently, $B=\{Ax : x\ge 0\}$.
+
+Let $b_1,b_2\in B$ and $\lambda\in[0,1]$. Then there exist $x_1,x_2\ge 0$ with $Ax_1=b_1$ and $Ax_2=b_2$. Set $x:=\lambda x_1+(1-\lambda)x_2$. Then $x\ge 0$ and
+\[
+Ax = \lambda Ax_1+(1-\lambda)Ax_2 = \lambda b_1+(1-\lambda)b_2.
+\]
+Hence $\lambda b_1+(1-\lambda)b_2\in B$, so $B$ is convex.
+
+\section*{Problem 2}
+
+Fix $A\in\mathbb{R}^{m\times n}$ and $c\in\mathbb{R}^n$, and let $B$ be as in Problem~1. For $b\in B$ define
+\[
+z(b) := \min\bigl\{ c^\top x : Ax=b,\, x\ge 0\bigr\}.
+\]
+
+Let $b_1,b_2\in B$ and $\lambda\in[0,1]$, and write $b_\lambda:=\lambda b_1+(1-\lambda)b_2\in B$. Let $x_1,x_2$ be minimizers for $b_1,b_2$ respectively. Then $x_\lambda:=\lambda x_1+(1-\lambda)x_2$ is feasible for $b_\lambda$, hence
+\[
+z(b_\lambda)\le c^\top x_\lambda = \lambda c^\top x_1+(1-\lambda)c^\top x_2 = \lambda z(b_1)+(1-\lambda)z(b_2).
+\]
+Thus $z$ is convex on $B$.
+
+\section*{Problem 3}
+
+Let $A\in\mathbf{S}^n$, $b\in\mathbb{R}^n$, $c\in\mathbb{R}$, and
+\[
+S:=\bigl\{x\in\mathbb{R}^n : x^\top Ax + b^\top x + c\le 0\bigr\}.
+\]
+Assume $A\succeq 0$. The quadratic $f(x):=x^\top Ax+b^\top x+c$ has Hessian $\nabla^2 f(x)=2A\succeq 0$ for all $x$, so $f$ is convex. Every sublevel set of a convex function is convex, hence $S=\{x:f(x)\le 0\}$ is convex.
+
+The converse is false: convexity of this particular $S$ does not force $A\succeq 0$. Take $A=-I$, $b=0$, $c=0$. Then
+\[
+f(x)=-\|x\|_2^2\le 0 \quad\text{for all }x,
+\]
+so $S=\mathbb{R}^n$, which is convex, while $A$ is not positive semidefinite.
+
+\section*{Problem 4}
+
+\subsection*{(a)}
+
+Assume $C$ is a convex cone. If $x,y\in C$, then $\frac{1}{2}x+\frac{1}{2}y\in C$ by convexity, and therefore
+\[
+x+y = 2\Bigl(\frac{1}{2}x+\frac{1}{2}y\Bigr)\in C
+\]
+because $C$ is a cone. Thus $C+C\subset C$.
+
+Conversely, assume $C$ is a cone with $C+C\subset C$. Let $x,y\in C$ and $\lambda\in[0,1]$. Then $\lambda x\in C$ and $(1-\lambda)y\in C$, so
+\[
+\lambda x+(1-\lambda)y\in C+C\subset C.
+\]
+Hence $C$ is convex.
+
+\subsection*{(b)}
+
+Let $C_1,C_2$ be convex cones containing the origin.
+
+\textbf{$C_1+C_2=\operatorname{conv}(C_1\cup C_2)$.}
+If $x_i\in C_i$, then $2x_i\in C_i$, and
+\[
+x_1+x_2 = \frac{1}{2}(2x_1)+\frac{1}{2}(2x_2)\in\operatorname{conv}(C_1\cup C_2).
+\]
+Thus $C_1+C_2\subset\operatorname{conv}(C_1\cup C_2)$.
+
+For the reverse inclusion: $0\in C_2$ gives $C_1=C_1+\{0\}\subset C_1+C_2$, and likewise $C_2\subset C_1+C_2$, so $C_1\cup C_2\subset C_1+C_2$. The sum of convex sets is convex, hence $\operatorname{conv}(C_1\cup C_2)\subset C_1+C_2$.
+
+\textbf{$C_1\cap C_2=\displaystyle\bigcup_{\alpha\in[0,1]}\bigl(\alpha C_1\cap(1-\alpha)C_2\bigr)$.}
+
+We first claim that
+\[
+\alpha C_1\cap(1-\alpha)C_2 = C_1\cap C_2 \qquad\text{for all }\alpha\in(0,1).
+\]
+If $x\in C_1\cap C_2$, then $x=\alpha(x/\alpha)$ with $x/\alpha\in C_1$, and $x=(1-\alpha)\bigl(x/(1-\alpha)\bigr)$ with $x/(1-\alpha)\in C_2$, so $x\in\alpha C_1\cap(1-\alpha)C_2$. Conversely, if $x=\alpha x_1=(1-\alpha)x_2$ with $x_i\in C_i$, then $x\in C_i$ because each $C_i$ is a cone, so $x\in C_1\cap C_2$.
+
+If $\alpha\in\{0,1\}$, then $\alpha C_1\cap(1-\alpha)C_2=\{0\}\subset C_1\cap C_2$. Combining these cases,
+\[
+\bigcup_{\alpha\in[0,1]}\bigl(\alpha C_1\cap(1-\alpha)C_2\bigr) = C_1\cap C_2.
+\]
+
+\section*{Problem 5}
+
+\subsection*{1.}
+
+We show that $\{x:Ax\le b,\, x\ge 0\}$ is nonempty if and only if $\{y:A^\top y\ge 0,\, y\ge 0,\, b^\top y<0\}$ is empty.
+
+($\Rightarrow$) Suppose $Ax\le b$, $x\ge 0$, and $A^\top y\ge 0$, $y\ge 0$, $b^\top y<0$. Then $y^\top Ax\le y^\top b<0$. But $y^\top Ax=(A^\top y)^\top x\ge 0$, a contradiction.
+
+($\Leftarrow$) Let
+\[
+K := \{Ax+s : x\ge 0,\, s\ge 0\},
+\]
+a finitely generated (hence closed) convex cone. The system $Ax\le b$, $x\ge 0$ is infeasible if and only if $b\notin K$. By the strict separating hyperplane theorem there exist $y\in\mathbb{R}^m$ and $\alpha\in\mathbb{R}$ such that
+\[
+y^\top z\le \alpha \quad\forall z\in K, \qquad y^\top b>\alpha.
+\]
+Since $0\in K$ we have $\alpha\ge 0$, hence $y^\top b>0$. Also $y^\top(Ax+s)\le\alpha$ for all $x,s\ge 0$, so $A^\top y\le 0$ and $y\le 0$ (otherwise some ray of $K$ would make $y^\top z$ arbitrarily large). Replacing $y$ by $-y$ yields $A^\top y\ge 0$, $y\ge 0$, and $b^\top y<0$.
+
+\subsection*{2.}
+
+We show that $\{x:Ax=b\}$ is nonempty if and only if $\{y:A^\top y=0,\, b^\top y\neq 0\}$ is empty.
+
+($\Rightarrow$) If $Ax=b$ and $A^\top y=0$, then $b^\top y=x^\top A^\top y=0$.
+
+($\Leftarrow$) Let $L:=\{Ax:x\in\mathbb{R}^n\}$, a subspace, hence a closed convex set. The system $Ax=b$ is infeasible if and only if $b\notin L$. By the strict separating hyperplane theorem there exist $y\in\mathbb{R}^m$ and $\alpha\in\mathbb{R}$ such that
+\[
+y^\top z\le \alpha \quad\forall z\in L, \qquad y^\top b>\alpha.
+\]
+Write $z=Ax$. Then $y^\top Ax\le\alpha$ for all $x\in\mathbb{R}^n$, i.e.\ $(A^\top y)^\top x\le\alpha$ for all $x$. Taking $\pm x$ forces $A^\top y=0$, and $x=0$ gives $\alpha\ge 0$. Thus $b^\top y>\alpha\ge 0$, so $b^\top y\neq 0$.
+
+\end{document}

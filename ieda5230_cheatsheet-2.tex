@@ -1,0 +1,212 @@
+\documentclass{article}
+\usepackage[letterpaper,margin=0.34in,top=0.30in,bottom=0.26in]{geometry}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{multicol}
+\usepackage{microtype}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.15pt}
+\setlength{\columnsep}{9pt}
+\setlength{\abovedisplayskip}{1pt}
+\setlength{\belowdisplayskip}{1pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+\newcommand{\sect}[1]{\par\vspace{1.2pt}{\fontsize{8}{9.2}\selectfont\textbf{#1}}\par\vspace{0.2pt}}
+\newcommand{\kw}[1]{\textbf{#1}}
+\begin{document}
+\noindent{\fontsize{8}{9.2}\selectfont\textbf{IEDA 5230 Midterm Cheat Sheet --- Deterministic OR (Luenberger \& Ye)}
+\hfill\textbf{LP, Duality, Simplex, Ellipsoid, IP}}\par
+\vspace{1pt}\hrule\vspace{2pt}
+\fontsize{6.7}{8.05}\selectfont
+\begin{multicols}{2}
+
+\sect{1. LP Foundations \& Convexity}
+\kw{Standard form (primal):} $\min c^\top x$ s.t.\ $Ax=b$, $x\ge 0$ ($A\in\mathbb{R}^{m\times n}$, rank $m$). Dual: $\max b^\top y$ s.t.\ $A^\top y+s=c$, $s\ge 0$; $s=$ dual slacks.
+
+\kw{LP facts.} Feasible region $=$ convex polyhedron. Every LP: infeasible / feasible-unbounded / feasible-bounded. Bounded $\Rightarrow$ local opt $=$ global opt; optimizers form a convex polyhedron (a face); all optimizers on boundary; if an extreme point exists, some extreme point is optimal. Adding a constant to the objective, scaling the objective or RHS, reordering vars/constraints, premultiplying equalities by a nonsingular matrix: optimality unchanged.
+
+\kw{Definitions.} Polyhedron $=$ intersection of half-spaces. Cone: $x\in C\Rightarrow tx\in C\ \forall t\ge 0$. $C$ convex cone $\Leftrightarrow C+C\subseteq C$. $\operatorname{conv}(X)=\{\sum_i\alpha_i x_i:\alpha_i\ge 0,\sum_i\alpha_i=1\}$. For convex cones $C_1,C_2\ni 0$: $C_1+C_2=\operatorname{conv}(C_1\cup C_2)$; $C_1\cap C_2=\bigcup_{\alpha\in[0,1]}(\alpha C_1\cap(1-\alpha)C_2)$.
+
+\kw{Carath\'eodory:} if $b\in\{Ax:x\ge 0\}$ (cone), $b=\sum_{i=1}^{d}a_{j_i}x_{j_i}$, $x_{j_i}\ge 0$, $d\le m$ (independent columns); if $b$ is in the convex hull of $a_1,\ldots,a_n$: $d\le m+1$. Proof sketch: take any representation $b=Ax$, $x\ge 0$; if used columns are dependent, $\sum_j\lambda_j a_j=0$ (some $\lambda_j>0$); step $x\leftarrow x-t\lambda$, $t=\min\{x_j/\lambda_j:\lambda_j>0\}$, until a component hits $0$ --- same $b$, fewer nonzeros; repeat until columns are independent ($d\le m$). Hull version: homogenize with a row of $1$s $\Rightarrow d\le m+1$.
+
+\kw{Separating hyperplane:} $b\notin$ closed convex $C\Rightarrow\exists a:\ a^\top b>\sup_{x\in C}a^\top x$. Supporting: $b\in\partial C\Rightarrow a^\top b=\sup_{x\in C}a^\top x$.
+
+\kw{Extreme point:} not a strict convex combination of two other feasible points.
+
+\kw{BFS.} Pick $m$ linearly independent columns $A_B$ (basis); $x_B=A_B^{-1}b$, $x_N=0$. BFS if $x_B\ge 0$; degenerate if some basic var $=0$. Extreme point $\Leftrightarrow$ BFS. Neighboring BFSs differ in exactly one basic variable. $\#\mathrm{BFS}\le\binom{n}{m}$.
+
+\kw{Fundamental theorem of LP:} feasible $\Rightarrow$ a BFS exists; an optimum exists $\Rightarrow$ an optimal BFS exists. Solving an LP $=$ searching corners. Feasible means $\{x:Ax=b,\,x\ge 0\}\neq\emptyset$. A basis is a set of $m$ independent columns; the BFS is the point $x_B=A_B^{-1}b$, $x_N=0$, and only when $x_B\ge 0$. A BFS is a corner, not automatically optimal: simplex walks from corner to corner. Feasible $\Rightarrow$ some corner exists. If the minimum is attained anywhere, it is attained at a corner (the optimal face contains a vertex). Why a BFS is a corner: $n-m$ zeros pin $Ax=b$ to one point. If the positive columns are dependent, $\exists d\neq 0$ with $Ad=0$ and $d_j=0$ wherever $x_j=0$. Then $A(x\pm\varepsilon d)=Ax=b$ for every $\varepsilon$ ($Ad=0$ protects only the equation). For $\varepsilon<\min_{d_j\neq 0}x_j/|d_j|$ both points stay nonnegative, so $x$ is their midpoint and not a corner.
+
+\kw{Convexity toolkit (HW1).} (i) $B=\{b:\exists x\ge 0,\ Ax=b\}$ convex: combine witnesses $x^{(1)},x^{(2)}$. (ii) Value function $z(b)=\min\{c^\top x:Ax=b,\,x\ge 0\}$ convex: $z(b_\lambda)\le c^\top(\lambda x^*+(1-\lambda)\hat x^*)=\lambda z(b)+(1-\lambda)z(b')$. (iii) Sublevel set $S=\{x:x^\top Ax+b^\top x+c\le 0\}$ convex if $A\succeq 0$ (key identity $x_\lambda^\top Ax_\lambda=-\lambda(1-\lambda)(x_1-x_2)^\top A(x_1-x_2)+\lambda x_1^\top Ax_1+(1-\lambda)x_2^\top Ax_2$); converse false ($n=1$, $A=-1$, $b=c=0$: $-x^2\le 0=$ all of $\mathbb{R}$).
+
+\sect{2. Farkas' Lemma \& Certificates}
+\kw{Farkas:} $\{x:Ax=b,\,x\ge 0\}$ feasible $\Leftrightarrow$ $\{y:A^\top y\le 0,\ b^\top y>0\}$ infeasible. Such a $y$ is an infeasibility certificate. Exactly one of the two systems is feasible.
+
+\kw{Variant:} $\{y:A^\top y\le c\}$ feasible $\Leftrightarrow$ no $x$ with $Ax=0$, $x\ge 0$, $c^\top x<0$.
+
+\kw{Pure equality:} $Ax=b$ has a solution $\Leftrightarrow$ no $y$ with $A^\top y=0$, $b^\top y\neq 0$.
+
+\kw{Proof sketch:} $(\Rightarrow)$ if $x$ is feasible and $y$ is a certificate: $0<b^\top y=x^\top A^\top y\le 0$, contradiction. $(\Leftarrow)$ if infeasible, $b\notin C=\{Ax:x\ge 0\}$ (closed convex); separate: $y^\top b>\sup_{x\ge 0}(A^\top y)^\top x$; since $0\in C$, $y^\top b>0$; and $A^\top y\le 0$, else the sup is $+\infty$ (take $\bar x=\alpha\to\infty$).
+
+$C$ closed: any $c^k=Ax^k\in C$ has bounded witnesses by Carath\'eodory ($x^k=A_{B_k}^{-1}c^k$ bounded), so the limit stays in $C$.
+
+\kw{HW1 variants:} $Ax\le b$, $x\ge 0$ feasible $\Leftrightarrow$ no $y\ge 0$, $A^\top y\ge 0$, $b^\top y<0$ (add slack $s$: $Ax+s=b$); use $x=x^+-x^-$ for the equality version.
+
+\sect{3. LP Duality}
+\kw{Dual construction (primal is min).}
+Write the primal as $\min c^\top x$ s.t.\ $(Ax)_i\ \{=,\ge,\le\}\ b_i$ and $x_j\ \{\ge 0,\ \le 0,\ \text{free}\}$.
+\kw{Objective coeffs} $=c$: $c_j$ is the cost of variable $x_j$.
+\kw{RHS} $=b$: $b_i$ is the right-hand side of constraint $i$.
+The \kw{$i$th primal constraint} is row $i$ of $A$.
+\kw{Free} $=$ no sign restriction (may be $+$, $-$, or $0$).
+The dual is $\max b^\top y$. Two swaps: objective coeffs $\leftrightarrow$ RHS means $c$ becomes the RHS of the dual constraints and $b$ becomes the objective coeffs of $y$; $A\leftrightarrow A^\top$ means one dual constraint per primal \emph{variable} (column of $A$), written with that row of $A^\top$.
+
+\noindent\begin{tabular}{@{}ll@{\qquad}ll@{}}
+$x_j\ge 0$ & $(A^\top y)_j\le c_j$ & $(Ax)_i=b_i$ & $y_i$ free\\
+$x_j\le 0$ & $(A^\top y)_j\ge c_j$ & $(Ax)_i\ge b_i$ & $y_i\ge 0$\\
+$x_j$ free & $(A^\top y)_j=c_j$ & $(Ax)_i\le b_i$ & $y_i\le 0$\\
+\end{tabular}
+
+\noindent Standard-form check: $Ax=b$, $x\ge 0$ $\Rightarrow$ $y$ free and $A^\top y\le c$, objective $\max b^\top y$.
+
+\kw{Weak duality:} $\mathcal{F}_p=\{x:Ax=b,\,x\ge 0\}$ and $\mathcal{F}_d=\{y:A^\top y\le c\}$ ($y$ free). If $x\in\mathcal{F}_p$ and $y\in\mathcal{F}_d$, then $Ax=b$ and $x\ge 0$, $A^\top y\le c$ give
+$b^\top y=x^\top A^\top y\le x^\top c=c^\top x$.
+
+\kw{Strong duality:} both feasible $\Rightarrow$ optima exist and $c^\top x^*=b^\top y^*$. Proof: any dual-feasible value bounds the primal, so the primal attains an optimal BFS $x$ with basis $B$. Set $y=(A_B^{-1})^\top c_B$. Then $b^\top y=c_B^\top A_B^{-1}b=c^\top x$, and basis optimality is $c-A^\top y\ge 0$, so $y\in\mathcal{F}_d$. Weak duality makes this $y$ dual optimal.
+
+\kw{LP duality theorem cases:} both feasible $\Rightarrow$ both optimal, equal values; one infeasible $\Rightarrow$ the other unbounded or infeasible; one unbounded $\Rightarrow$ the other infeasible.
+
+\kw{Optimality conditions:} a point $x$ is optimal exactly when it is primal feasible and some dual-feasible $y$ has the same objective value. In symbols: $Ax=b$, $x\ge 0$, $A^\top y\le c$, and $c^\top x=b^\top y$. Weak duality already says every such pair has $c^\top x\ge b^\top y$, so equal values mean neither problem can improve.
+
+\kw{Complementarity:} a feasible pair is optimal $\Leftrightarrow$ $x^\top s=0$, i.e.\ $x_js_j=0\ \forall j$ ($Xs=0$, $Ax=b$, $A^\top y+s=c$). Strict complementarity: $\exists$ an optimal pair with $x^*+s^*>0$; supports $P=\{j:x_j^*>0\}$, $Z=\{j:s_j^*>0\}$ form the complementarity partition, invariant across all strictly complementary pairs; they define the primal/dual optimal faces.
+
+\kw{Shadow prices:} $z(b)=\min\{c^\top x:Ax=b,\,x\ge 0\}$ is the cheapest cost of meeting requirement $b$. The optimal dual vector $y^*$ is the shadow price: $y_k^*$ is how fast that cost changes when $b_k$ increases. At an optimal basis, $z(b)=c_B^\top A_B^{-1}b=b^\top y^*$ with $y^*=(A_B^{-1})^\top c_B$, so while this basis stays optimal $z$ is linear in $b$ and $z(b+\delta e_k)=z(b)+\delta y_k^*$, i.e.\ $\nabla z(b)=y^*$. The basis survives only while $x_B+\delta A_B^{-1}e_k\ge 0$. Past that step the corner changes and the slope can jump: $z$ is convex and piecewise linear. On a kink, $y^*$ is one slope from the interval of optimal dual solutions.
+
+\kw{Self-dual LPs (HW2):} $M$ skew-symmetric ($M=-M^\top$): $(P)\ \min q^\top z$ s.t.\ $Mz\ge -q$, $z\ge 0$ has dual $\max -q^\top u$ s.t.\ $M^\top u\le q$ (same problem: same feasible set, same optimizers, optimal values are negatives). Canonical data $M=\bigl(\begin{smallmatrix}0&-A^\top\\ A&0\end{smallmatrix}\bigr)$, $q=(c;-b)$ merges primal $\min c^\top x$, $Ax\ge b$ and its dual into one problem whose objective $c^\top x-b^\top y$ is the duality gap; feasible $\Leftrightarrow$ optimal (weak duality bounds the gap by $0$).
+
+\kw{Applications.} Each pair below is one primal story and the dual prices that certify it. At optimum the two objective values match.
+
+\kw{Production / liquidation.} A product is one coordinate of $x$. A resource is one row of $A$. Making one unit of product $j$ earns profit $p_j$ and uses $a_{ij}$ units of resource $i$. The stock of resource $i$ is $r_i$. The production LP is
+\[
+\max\ p^\top x \quad\text{s.t.}\quad Ax\le r,\quad x\ge 0.
+\]
+The objective is total profit. Each row of $Ax\le r$ says you cannot use more of a resource than you have. The dual sells the stock instead of manufacturing. Let $y_i\ge 0$ be the price of one unit of resource $i$. The liquidation LP is
+\[
+\min\ r^\top y \quad\text{s.t.}\quad A^\top y\ge p,\quad y\ge 0.
+\]
+The objective is the cash you get for the whole stock. The constraint for product $j$ says the resources inside one unit of that product sell for at least $p_j$, so manufacturing it is no better than selling its ingredients. At optimum the best profit equals the best sale price of the stock, and $y$ is that liquidation price.
+
+\kw{Transportation.} A supply point $i$ holds $s_i$ units. A demand point $j$ needs $d_j$ units. The route from $i$ to $j$ costs $c_{ij}$ per unit, and $x_{ij}$ is how many units you send on that route. The transportation LP is
+\[
+\begin{aligned}
+\min \quad & \sum_{i,j} c_{ij}x_{ij}\\
+\text{s.t.} \quad & \sum_j x_{ij}=s_i && \text{for each supply $i$},\\
+& \sum_i x_{ij}=d_j && \text{for each demand $j$},\\
+& x_{ij}\ge 0.
+\end{aligned}
+\]
+The first family of equations ships out everything that is in stock. The second delivers exactly what each customer ordered. The dual puts a price $u_i$ on supply $i$ and a price $v_j$ on demand $j$:
+\[
+\max\ \sum_i s_i u_i+\sum_j d_j v_j \quad\text{s.t.}\quad u_i+v_j\le c_{ij}.
+\]
+The constraint says that buying at $i$ and selling at $j$ cannot beat the shipping cost $c_{ij}$. The objective is the money those prices collect from the supplies and the demands. At optimum the cheapest shipping plan costs the same as the best such pricing.
+
+\kw{Max flow $=$ min cut.} A vertex is a node. An edge $(i,j)$ is an arrow from vertex $i$ to vertex $j$, with capacity $k_{ij}$. Vertex $1$ is the source, where flow is created. Vertex $m$ is the sink, where flow ends. Every other vertex is a middle vertex: it cannot keep flow, so flow in equals flow out. Let $x_{ij}$ be the amount sent along edge $(i,j)$. The max-flow LP is
+\[
+\begin{aligned}
+\max \quad & \sum_{j:(1,j)\in E} x_{1j}\\
+\text{s.t.} \quad & \sum_{j:(j,i)\in E}x_{ji}=\sum_{j:(i,j)\in E}x_{ij} && \text{for every middle vertex $i$},\\
+& 0\le x_{ij}\le k_{ij}.
+\end{aligned}
+\]
+The objective is the total flow leaving the source. It equals the total flow entering the sink. The dual prices a cut. Give vertex $i$ a label $y_i$, with $y_1-y_m=1$. At an optimum these labels are $0$ or $1$: $y_i=1$ means source side, $y_i=0$ means sink side. For each edge pay $z_{ij}\ge y_i-y_j$, and minimize $\sum k_{ij}z_{ij}$ subject to $-y_i+y_j+z_{ij}\ge 0$, $y_1-y_m=1$, $z\ge 0$. Then $z_{ij}$ is forced to be at least $1$ exactly on edges that leave the source side, so the dual objective is the capacity of the cut. Strong duality says the largest flow equals the cheapest cut.
+
+\kw{Zero-sum game.} The payoff matrix is $P$. Rows are the row player's pure actions, columns are the column player's. The entry $P_{ij}$ is what the row player pays the column player when those two actions are chosen. A mixed strategy is a probability vector: $x\ge 0$, $\mathbf{1}^\top x=1$ for the column player, and $y\ge 0$, $\mathbf{1}^\top y=1$ for the row player. The column player maximizes the payoff $v$ that is guaranteed no matter which row is played:
+\[
+\max\ v \quad\text{s.t.}\quad v\mathbf{1}\le Px,\quad \mathbf{1}^\top x=1,\quad x\ge 0.
+\]
+Each inequality says that if the row player picks that row, the expected payment is still at least $v$. The row player minimizes the payment $u$ that is guaranteed no matter which column is played:
+\[
+\min\ u \quad\text{s.t.}\quad u\mathbf{1}\ge P^\top y,\quad \mathbf{1}^\top y=1,\quad y\ge 0.
+\]
+Strong duality says the best guaranteed payoff equals the best guaranteed payment, $\max v=\min u$. That common number is the value of the game, and the optimal mixed strategies are a Nash equilibrium: neither player gains by switching alone.
+
+\sect{4. The Simplex Method}
+Simplex walks from corner to corner of the feasible set. One corner is one basis. The tableau is that corner rewritten so the basic variables are already solved for.
+
+\kw{What the tableau is.} Multiply $Ax=b$ by $A_B^{-1}$. Then $\bar b=A_B^{-1}b$ is the value of the basic variables (nonbasic variables are $0$), and $\bar A=A_B^{-1}A$ is the constraint matrix, whose basic columns are the identity. Rewrite the objective so basic variables disappear from it. The constant left over is the current cost $z=c_B^\top A_B^{-1}b$. The coefficients left on the nonbasic variables are the reduced costs
+\[
+r=c-A^\top y,\qquad y=(A_B^{-1})^\top c_B.
+\]
+Here $y$ is the shadow price of this basis. A negative $r_j$ (minimization) means ``raising $x_j$ from $0$ lowers the cost.'' If every $r_j\ge 0$, no such move helps, so this corner is optimal, and the same $y$ is optimal for the dual because $A^\top y\le c$ and $b^\top y=c^\top x$.
+
+\kw{One step, on an example.} Minimize $-4x_1-3x_2$ with $x_1+x_2\le 4$, $2x_1+x_2\le 6$. Start with the slacks basic:
+\[
+\begin{array}{c|rrrr|r}
+ & x_1 & x_2 & s_1 & s_2 & \mathrm{RHS}\\
+\hline
+s_1 & 1 & 1 & 1 & 0 & 4\\
+s_2 & 2 & 1 & 0 & 1 & 6\\
+r & -4 & -3 & 0 & 0 & z=0
+\end{array}
+\]
+The point is $(x_1,x_2)=(0,0)$, cost $0$.
+
+\kw{1.\ Who enters.} The most negative reduced cost is $r_e=-4$, so $x_1$ enters. If every $r_j\ge 0$, stop: this corner is optimal. (For a maximization problem, enter the most positive reduced cost instead.)
+
+\kw{2.\ Who leaves.} Raising $x_1$ must keep the equations. Each row says how fast a basic variable falls. The ratios are $4/1=4$ and $6/2=3$. The smaller one is $\theta=3$, so $s_2$ hits zero first and leaves. In symbols, $\theta=\min_i\{\bar b_i/\bar A_{ie}:\bar A_{ie}>0\}$, and row $o$ leaves. If the whole entering column is $\le 0$, no basic variable ever hits zero, $x_1$ can grow forever, and the cost goes to $-\infty$: stop, unbounded.
+
+\kw{3.\ Pivot.} Divide the leaving row by the pivot $\bar a_{oe}$. For every other row $i$, subtract $\bar a_{ie}/\bar a_{oe}$ times the new leaving row, and do the same to the reduced-cost row. The entering column becomes a unit vector, so that variable is now basic. The cost drops by $\theta|r_e|$. Then repeat.
+
+\kw{Rules, degeneracy, speed.} Greedy (Dantzig) enters the most negative $r_e$; that is the steepest drop per unit of the entering variable, and the actual drop is $\theta|r_e|$. Bland enters the smallest index, and breaks ratio ties by the smallest index; that rule never cycles. A degenerate corner has some basic variable already $0$, so a ratio can be $\theta=0$: the basis changes but the point stays put, and a careless rule can loop forever. If every basic variable is at least $\delta>0$ and the corner is not huge, each step cuts the remaining gap by a fixed fraction, so greedy simplex finishes in about $n(\Delta/\delta)\log(m\Delta/\delta)$ steps. The Klee--Minty cube is a worst case: greedy still visits all $2^n$ corners. So simplex can be exponential, but on real problems it is fast. The ellipsoid method and interior-point methods are polynomial even in the worst case.
+
+\kw{MDP, same idea.} A state $i$ has actions. A policy is one action per state. $y_i$ is the cost of being in state $i$, and it satisfies $y_i=\min_{j\in A_i}\{c_j+\gamma p_j^\top y\}$: pay $c_j$ now, then move at random with discount $\gamma$. Value iteration just repeats that update; the error shrinks by $\gamma$ each round. The LP version minimizes the total action-cost $\sum c_j x_j$, where $x_j$ is how often action $j$ is used. A policy is exactly a basis of that LP, so running simplex on it is policy iteration. For fixed $\gamma$ this is strongly polynomial: about $\frac{mn}{1-\gamma}\log\frac{m^2}{1-\gamma}$ simplex steps. A smallest-index rule can still be exponential.
+
+\sect{5. The Ellipsoid Method}
+This is a way to find a point in a polyhedron, or to prove there is none, in polynomial time (Khachiyan, 1979). Simplex walks on corners and can visit exponentially many of them. The ellipsoid method shrinks a blob that is guaranteed to contain the answer.
+
+\kw{The picture.} Let $Y=\{y:a_j^\top y\le c_j\}$ be the set you want a point of. Start with a big ellipse $E$ that contains $Y$. Look at its center. If the center satisfies every inequality, you are done: it is a feasible point. If some inequality $a^\top y\le a^\top\bar y$ cuts the center off, throw away the half of the ellipse on the wrong side of that cut. Draw the smallest ellipse that still covers the remaining half. That new ellipse is slightly smaller, and it still contains $Y$. Repeat.
+
+\kw{The formula.} An ellipse is $E=\{y:(y-\bar y)^\top B^{-1}(y-\bar y)\le 1\}$ with $B$ symmetric positive definite; its volume is $(\det B)^{1/2}$ times the volume of the unit ball. After a cut with normal $a$, the new center and shape are, with $\tau=1/(m+1)$, $\delta=m^2/(m^2-1)$, $\sigma=2\tau$,
+\[
+\bar y^+=\bar y-\frac{\tau}{\sqrt{a^\top Ba}}Ba,\qquad
+B^+=\delta\Bigl(B-\sigma\frac{Baa^\top B}{a^\top Ba}\Bigr).
+\]
+Each update multiplies the volume by at most $e^{-1/(2(m+1))}$, a fixed shrinkage that depends only on the dimension.
+
+\kw{When to stop.} You need two size bounds. $Y$ starts inside a known ball of radius $R$, and if $Y$ is nonempty it contains some small ball of radius $r$. Begin with $B_0=R^2 I$. After about $K=2m(m+1)\log(R/r)$ cuts, the ellipse is smaller than that inner ball, so $Y$ must have been empty. Each step is polynomial, so the whole method is polynomial. In practice it takes nearly that many iterations and is slow; simplex is usually much faster.
+
+\sect{6. Integer Programming}
+IP $=$ LP $+$ integrality constraints. Types: pure IP, mixed (MIP), binary (BIP). Models: logical constraints, $k$-out-of-$n$, piecewise linear, knapsack ($\max\sum c_i x_i$, $\sum a_i x_i\le b$, $x\in\{0,1\}^n$), TSP: $x_{ij}\in\{0,1\}$, out-degree $\sum_j x_{ij}=1\ \forall i$, in-degree $\sum_i x_{ij}=1\ \forall j$; subtour elimination $\sum_{i,j\in Q}x_{ij}\le|Q|-1$ for all $Q$ with $2\le|Q|\le n/2$ (exponentially many; lazy constraints: add on discovery). MTZ: positions $1\le u_i\le n$, $u_i-u_j+nx_{ij}\le n-1$ ($2\le i\neq j\le n$): $x_{ij}=1$ forces $u_j\ge u_i+1$.
+
+\kw{LP relaxation:} drop integrality. Properties (min): LP opt $\le$ IP opt (lower bound); LP infeasible $\Rightarrow$ IP infeasible; an integral LP solution solves the IP. The convex hull of the integer points is the ideal formulation but hard to describe.
+
+\kw{Total unimodularity (TU):} every square submatrix has $\det\in\{0,\pm 1\}$ (entries $0,\pm 1$); then $A_B^{-1}$ is integer $\Rightarrow$ every BFS is integer ($A_B^{-1}b$ integer for integer $b$) $\Rightarrow$ LP solves IP. Transportation and min-cut matrices are TU.
+
+\kw{Cutting planes:} a valid inequality cuts no integer point. Solve the LP relaxation; if $x^*$ is fractional, find a cut and re-solve (finite for pure IP --- Gomory; MIP: Dash et al.). Gomory cut: from an optimal basis, a fractional basic row $x_i+\sum_{j\in N}\bar a_{ij}x_j=\bar a_{i0}$ ($\bar a_{i0}\notin\mathbb{Z}$) gives $x_i+\sum_{j\in N}\lfloor\bar a_{ij}\rfloor x_j\le\lfloor\bar a_{i0}\rfloor$ for every integer solution; $x^*$ violates it. Needs integer coefficients/RHS (scale constraints first; slacks integer).
+
+\kw{Branch \& bound:} bound via the LP relaxation $b(F_i)\le\min_{F_i}c^\top x$; incumbent $z^*$ (upper bound, $+\infty$ initially). Loop: select an active subproblem; infeasible $\Rightarrow$ delete; $b(F_i)\ge z^*$ $\Rightarrow$ delete (bound); else if the LP solution is integral $\Rightarrow$ update $z^*$; else branch on a fractional $x_j$: $F_i\cap\{x_j\le\lfloor\bar x_j\rfloor\}$ and $F_i\cap\{x_j\ge\lceil\bar x_j\rceil\}$. With cutting planes this is branch-and-cut. B\&B is general/adaptive (Excel Solver); Gomory is finite but weak in practice.
+
+\sect{7. HW Proof Sketches}
+\kw{Sol1:} P1 $B=\{b:Ax=b,\,x\ge 0\}$ is convex by convex combination of witnesses. P2 $z(b)$ convex: a convex combination of optima is feasible for $b_\lambda$, so $z(b_\lambda)\le$ the combination of the values. P3 $S$ convex if $A\succeq 0$: key identity $f(x_\lambda)=\lambda f(x_1)+(1-\lambda)f(x_2)-\lambda(1-\lambda)(x_1-x_2)^\top A(x_1-x_2)$ for $f(x)=x^\top Ax+b^\top x+c$ (cross terms merge: $x_1^\top Ax_2=x_2^\top Ax_1$ by symmetry; $\lambda-\lambda^2=\lambda(1-\lambda)$). Read: curve $=$ chord $-$ gap; $A\succeq 0\Rightarrow$ gap $\ge 0\Rightarrow f(x_\lambda)\le\lambda\cdot 0+(1-\lambda)\cdot 0=0$. Converse false ($n=1$, $A=-1$, $b=c=0$: $-x^2\le 0=$ all of $\mathbb{R}$); $A\preceq 0$ flips the identity $\Rightarrow$ concavity (the sublevel set is non-convex in general). P4 a cone is convex $\Leftrightarrow C+C\subseteq C$ ($\alpha x+(1-\alpha)y\in C+C$; converse via $x+y=\tfrac12(2x+2y)$); $C_1+C_2=\operatorname{conv}(C_1\cup C_2)$: $\subseteq$ by scaling $2x=x_1+x_2$; $\supseteq$ since $0\in C_i$ and $C_1+C_2$ is convex; intersection identity via $\alpha C_1\cap(1-\alpha)C_2=C_1\cap C_2$ for $0<\alpha<1$. P5 Farkas variants: slack variables / $x=x^+-x^-$.
+
+\kw{Sol2:} P1 $x=0$ feasible $\Rightarrow b=0$; $0=\lambda y+(1-\lambda)z$ with $y,z\ge 0$ forces $y=z=0$: extreme point; every basis gives $A_B^{-1}b=0$: the unique BFS, hence the optimal BFS. P2 self-dual, above. P3 seating $=$ max flow: source $\to F_i$ with cap $a(i)$; $F_i\to T_j$ with cap $1$ (same-family separation); $T_j\to$ sink with cap $b(j)$; max flow $=\sum a(i)$ $\Leftrightarrow$ a seating exists. Standard form via slacks: $\min-\sum x_{ij}$, $\sum_j x_{ij}+s_i^{(a)}=a(i)$, $\sum_i x_{ij}+s_j^{(b)}=b(j)$, $x_{ij}+s_{ij}^{(c)}=1$. P4 feasibility via an LP: $\min e^\top s$ s.t.\ $Ax+Is=b$, $x,s\ge 0$ ($b\ge 0$: $s=b$ is feasible, objective $\ge 0$ $\Rightarrow$ an optimum exists); dual $\max b^\top y$ s.t.\ $A^\top y\le 0$, $y\le e$; opt $=0\Leftrightarrow s^*=0\Leftrightarrow Ax=b$, $x\ge 0$ is solvable. P5 simplex tableau (max): slacks $s_1,s_2$; enter $x_3$ ($r=-4$), leave $s_2$ (ratio $3$); then enter $x_2$, leave $s_1$; optimal $z=92/3$, $x^*=(0,28/3,2/3,0)$; stop when no reduced cost is negative.
+
+\sect{8. Linear Algebra Toolkit (PD/PSD Matrices)}
+\kw{Spectral theorem:} symmetric $A=A^\top$ has real eigenvalues $\lambda_i$ and an orthonormal eigenbasis $Q$: $A=Q\Lambda Q^\top$, $Q^\top Q=I$; $A^k=Q\Lambda^k Q^\top$; square root $A^{1/2}=Q\Lambda^{1/2}Q^\top$. $\det A=\prod_i\lambda_i$, $\operatorname{tr} A=\sum_i\lambda_i$; rank $=\#$ nonzero eigenvalues (symmetric case).
+
+\kw{Positive definite} ($A\succ 0$) --- any of: $v^\top Av>0\ \forall v\neq 0$; all $\lambda_i>0$; $A=M^\top M$ with $M$ nonsingular; all leading principal minors $>0$ (Sylvester); $A^{-1}\succ 0$.
+
+\kw{Positive semidefinite} ($A\succeq 0$) --- any of: $v^\top Av\ge 0\ \forall v$; all $\lambda_i\ge 0$; $A=M^\top M$ for some $M$; all principal minors $\ge 0$; $\exists A^{1/2}\succeq 0$ with $(A^{1/2})^2=A$.
+
+\kw{Quadratic forms:} $x^\top Ax=x^\top\frac{A+A^\top}{2}x$ (only the symmetric part matters); $\lambda_{\min}\|x\|^2\le x^\top Ax\le\lambda_{\max}\|x\|^2$; congruence preserves PSD: $A\succeq 0\Rightarrow M^\top AM\succeq 0\ \forall M$; sums of PSD matrices are PSD; $A\succ 0$ defines the ellipsoid $\{x:x^\top Ax\le 1\}$ with semiaxes $1/\sqrt{\lambda_i}$ along eigenvectors, so $\mathrm{vol}=(\det A)^{-1/2}\mathrm{vol}(\text{unit ball})$ (ellipsoid-method connection).
+
+\kw{Invertibility equivalents} ($n\times n$): $\det A\neq 0\Leftrightarrow\operatorname{null}(A)=\{0\}\Leftrightarrow$ columns independent $\Leftrightarrow\operatorname{rank} A=n\Leftrightarrow 0$ is not an eigenvalue $\Leftrightarrow Ax=b$ has a unique solution for every $b\Leftrightarrow A^{-1}$ exists (nonsingular). $\det(AB)=\det A\det B$.
+
+\kw{Kernel and image.} For $A\in\mathbb{R}^{m\times n}$, $\ker(A)=\{x:Ax=0\}\subseteq\mathbb{R}^n$, $\operatorname{im}(A)=\{Ax\}\subseteq\mathbb{R}^m$, $\operatorname{rank}(A)=\dim\operatorname{im}(A)$. Rank--nullity: $\dim\ker(A)+\dim\operatorname{im}(A)=n$, and $\operatorname{rank}(A)=\operatorname{rank}(A^\top)$. Orthogonal decomposition (the four subspaces): $\ker(A)=\operatorname{im}(A^\top)^\perp$, $\operatorname{im}(A)=\ker(A^\top)^\perp$, so $\mathbb{R}^n=\ker(A)\oplus\operatorname{im}(A^\top)$ and $\mathbb{R}^m=\ker(A^\top)\oplus\operatorname{im}(A)$. Consequence: $Ax=b$ is solvable $\Leftrightarrow b\perp\ker(A^\top)$ (every $y$ with $A^\top y=0$ has $y^\top b=0$).
+
+\kw{Inner products:} $\|x\|=\sqrt{x^\top x}$; Cauchy--Schwarz $|x^\top y|\le\|x\|\|y\|$; triangle $\|x+y\|\le\|x\|+\|y\|$; $A\succeq 0$ gives the norm $\|x\|_A=\sqrt{x^\top Ax}$.
+
+\end{multicols}
+\end{document}

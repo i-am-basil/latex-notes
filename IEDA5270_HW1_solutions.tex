@@ -1,0 +1,408 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+
+\title{\textbf{Homework 1}}
+\author{Vasilii Slyshkin \\ \texttt{vslyshkin@connect.ust.hk}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Problem 1}
+
+\subsection*{(a)}
+
+We show $(A\cap C)\cup(B\cap C)\subset(A\cup B)\cap C$.
+
+Let $x\in(A\cap C)\cup(B\cap C)$. Then either $x\in A\cap C$ or $x\in B\cap C$.
+
+If $x\in A\cap C$, then $x\in A$ and $x\in C$, so $x\in A\cup B$ and $x\in C$, hence $x\in(A\cup B)\cap C$.
+
+If $x\in B\cap C$, then $x\in B$ and $x\in C$, so again $x\in A\cup B$ and $x\in C$, hence $x\in(A\cup B)\cap C$.
+
+Thus $(A\cap C)\cup(B\cap C)\subset(A\cup B)\cap C$. Combined with the inclusion proved in class, equality holds.
+
+\subsection*{(b)}
+
+From class, $A^c$ and $B$ are independent, so $P(A^c\cap B)=P(A^c)P(B)$. Note that $A^c= (A^c\cap B)\cup(A^c\cap B^c)$ is a disjoint union, hence
+\[
+P(A^c)=P(A^c\cap B)+P(A^c\cap B^c).
+\]
+Therefore
+\begin{align*}
+P(A^c\cap B^c)
+&= P(A^c)-P(A^c\cap B)
+= P(A^c)-P(A^c)P(B)
+= P(A^c)\bigl(1-P(B)\bigr)
+= P(A^c)P(B^c).
+\end{align*}
+Hence $A^c$ and $B^c$ are independent.
+
+\section*{Problem 2}
+
+\subsection*{(a)}
+
+Note that $1_{\{N\ge 1\}}\le N$, since both sides are nonnegative integers and the inequality holds for every realization of $N$. Taking expectations,
+\[
+P\Bigl(\bigcup_{i=1}^{20} A_i\Bigr)
+= E\bigl[1_{\{N\ge 1\}}\bigr]
+\le E[N]
+= E\Bigl[\sum_{i=1}^{20} 1_{A_i}\Bigr]
+= \sum_{i=1}^{20} P(A_i).
+\]
+With $P(A_i)=0.01$,
+\[
+P\Bigl(\bigcup_{i=1}^{20} A_i\Bigr)\le 20\cdot 0.01 = 0.2.
+\]
+
+\subsection*{(b)}
+
+For every nonnegative integer $n$,
+\[
+1_{\{n\ge 1\}} \ge n-\binom{n}{2},
+\]
+since the right-hand side equals $1$ for $n\in\{1,2\}$ and is at most $0$ for $n=0$ or $n\ge 3$. Applying this to $N$ and taking expectations,
+\[
+P\Bigl(\bigcup_{i=1}^{20} A_i\Bigr)
+= E\bigl[1_{\{N\ge 1\}}\bigr]
+\ge E[N]-E\Bigl[\binom{N}{2}\Bigr].
+\]
+Expanding,
+\[
+\binom{N}{2}=\sum_{1\le i<j\le 20} 1_{A_i\cap A_j},
+\qquad
+E\Bigl[\binom{N}{2}\Bigr]=\sum_{i<j} P(A_i\cap A_j),
+\]
+so
+\[
+P\Bigl(\bigcup_{i=1}^{20} A_i\Bigr)
+\ge \sum_i P(A_i)-\sum_{i<j} P(A_i\cap A_j).
+\]
+Under pairwise independence, $P(A_i\cap A_j)=P(A_i)P(A_j)=10^{-4}$. There are $\binom{20}{2}=190$ pairs, hence
+\[
+P\Bigl(\bigcup_{i=1}^{20} A_i\Bigr)
+\ge 0.2-190\cdot 10^{-4}=0.2-0.019=0.181.
+\]
+
+\subsection*{(c)}
+
+Under mutual independence,
+\[
+P\Bigl(\bigcup_{i=1}^{20} A_i\Bigr)
+= 1-\prod_{i=1}^{20}\bigl(1-P(A_i)\bigr)
+= 1-(0.99)^{20}
+\approx 0.1821.
+\]
+This lies between the lower bound $0.181$ and the upper bound $0.2$.
+
+Pairwise independence alone does not determine $P(\bigcap_i A_i^c)$, because that probability depends on the full joint distribution of $(1_{A_1},\ldots,1_{A_{20}})$, not merely on the two-dimensional margins. Mutual independence is what factors the product $\prod(1-P(A_i))$.
+
+\section*{Problem 3}
+
+Let $S\in\{\mathrm{dot},\mathrm{dash}\}$ denote the symbol sent and $R$ the symbol received. Then
+\[
+P(S=\mathrm{dot})=\tfrac37,\qquad P(S=\mathrm{dash})=\tfrac47,
+\]
+and
+\begin{align*}
+P(R=\mathrm{dash}\mid S=\mathrm{dot})&=\tfrac14,
+&
+P(R=\mathrm{dot}\mid S=\mathrm{dot})&=\tfrac34,\\
+P(R=\mathrm{dot}\mid S=\mathrm{dash})&=\tfrac13,
+&
+P(R=\mathrm{dash}\mid S=\mathrm{dash})&=\tfrac23.
+\end{align*}
+
+\subsection*{(a)}
+
+By Bayes,
+\begin{align*}
+P(R=\mathrm{dash})
+&= \tfrac14\cdot\tfrac37+\tfrac23\cdot\tfrac47
+= \tfrac{3}{28}+\tfrac{8}{21}
+= \tfrac{9}{84}+\tfrac{32}{84}
+= \tfrac{41}{84},
+\end{align*}
+so
+\[
+P(S=\mathrm{dash}\mid R=\mathrm{dash})
+= \frac{\tfrac23\cdot\tfrac47}{\tfrac{41}{84}}
+= \frac{8/21}{41/84}
+= \frac{32}{41}.
+\]
+
+\subsection*{(b)}
+
+Write $\mathrm{d}=\mathrm{dot}$ and $\mathrm{D}=\mathrm{dash}$. The four possible sent messages for a received message $\mathrm{dd}$ are $\mathrm{dd}$, $\mathrm{dD}$, $\mathrm{Dd}$, and $\mathrm{DD}$. Under independence across positions,
+\begin{align*}
+P(S=\mathrm{dd})&=\Bigl(\tfrac37\Bigr)^2=\tfrac{9}{49},
+&
+P(R=\mathrm{dd}\mid S=\mathrm{dd})&=\Bigl(\tfrac34\Bigr)^2=\tfrac{9}{16},\\
+P(S=\mathrm{dD})&=\tfrac37\cdot\tfrac47=\tfrac{12}{49},
+&
+P(R=\mathrm{dd}\mid S=\mathrm{dD})&=\tfrac34\cdot\tfrac13=\tfrac14,\\
+P(S=\mathrm{Dd})&=\tfrac47\cdot\tfrac37=\tfrac{12}{49},
+&
+P(R=\mathrm{dd}\mid S=\mathrm{Dd})&=\tfrac13\cdot\tfrac34=\tfrac14,\\
+P(S=\mathrm{DD})&=\Bigl(\tfrac47\Bigr)^2=\tfrac{16}{49},
+&
+P(R=\mathrm{dd}\mid S=\mathrm{DD})&=\Bigl(\tfrac13\Bigr)^2=\tfrac19.
+\end{align*}
+The unnormalized posteriors $P(R=\mathrm{dd}\mid S)\,P(S)$ are
+\[
+\frac{9}{16}\cdot\frac{9}{49}=\frac{81}{784},
+\quad
+\frac14\cdot\frac{12}{49}=\frac{3}{49}=\frac{48}{784},
+\quad
+\frac{48}{784},
+\quad
+\frac19\cdot\frac{16}{49}=\frac{16}{441}=\frac{256}{7056}.
+\]
+Clearing a common denominator $7056=9\cdot 784$,
+\[
+\frac{729}{7056},\quad
+\frac{432}{7056},\quad
+\frac{432}{7056},\quad
+\frac{256}{7056}.
+\]
+The normalizing constant is $729+432+432+256=1849$, so
+\begin{align*}
+P(S=\mathrm{dd}\mid R=\mathrm{dd})&=\frac{729}{1849},
+&
+P(S=\mathrm{dD}\mid R=\mathrm{dd})&=\frac{432}{1849},\\
+P(S=\mathrm{Dd}\mid R=\mathrm{dd})&=\frac{432}{1849},
+&
+P(S=\mathrm{DD}\mid R=\mathrm{dd})&=\frac{256}{1849}.
+\end{align*}
+
+\section*{Problem 4}
+
+\subsection*{(a)}
+
+For $x\in[0,1)$, $x^n\to 0$; at $x=1$, $h_n(1)=1$ for all $n$. Thus $h_n(x)\to 0$ for Lebesgue-almost every $x\in\mathbb{R}$ (the single point $\{1\}$ has measure zero). Moreover $|h_n(x)|\le 1_{\{[0,1]\}}(x)=:g(x)$, and $\int g<\infty$. By the Dominated Convergence Theorem,
+\[
+\lim_{n\to\infty}\int_{\mathbb{R}} h_n(x)\,dx
+= \int_{\mathbb{R}} 0\,dx = 0.
+\]
+(Directly: $\int_0^1 x^n\,dx=1/(n+1)\to 0$.)
+
+\subsection*{(b)}
+
+Let $(t_n)$ be any sequence with $t_n\to t_0$. For $n$ large, $|h(x,t_n)|\le g(x)$ with $g$ integrable, and $h(x,t_n)\to h(x,t_0)$ pointwise. DCT gives
+\[
+\lim_{n\to\infty}\int h(x,t_n)\,dx=\int h(x,t_0)\,dx.
+\]
+Since the limit along every sequence $t_n\to t_0$ equals $\int h(x,t_0)\,dx$, we obtain
+\[
+\lim_{t\to t_0}\int h(x,t)\,dx=\int h(x,t_0)\,dx.
+\]
+
+\subsection*{(c)}
+
+(i) Factor out $e^{t_0 x}$:
+\[
+q_h(x)=e^{t_0 x}\cdot\frac{e^{hx}-1}{h}.
+\]
+Set $u=hx$. As $h\to 0$ we have $u\to 0$, and
+\[
+\frac{e^{hx}-1}{h}=x\cdot\frac{e^u-1}{u}\to x\cdot 1=x,
+\]
+using the standard limit $\lim_{u\to 0}(e^u-1)/u=1$. Therefore
+\[
+q_h(x)\to e^{t_0 x}\cdot x=x\,e^{t_0 x}.
+\]
+
+(ii) By the mean value theorem, for each fixed $x$ and $h\neq 0$ there is $\xi$ between $t_0$ and $t_0+h$ with $q_h(x)=x\,e^{\xi x}$. Choose $\delta>0$ so that $[t_0-\delta,t_0+\delta]\subset\{t:M_X(t)<\infty\}$. For $|h|<\delta$,
+\[
+|q_h(x)|\le |x|\,e^{(|t_0|+\delta)|x|}.
+\]
+The dominating function $|x|e^{(|t_0|+\delta)|x|}$ is integrable because $M_X$ is finite on a neighborhood of $t_0$ (e.g.\ compare with $e^{\pm(|t_0|+\delta+\varepsilon)X}$ for small $\varepsilon>0$). Applying DCT to $E[q_h(X)]$ as $h\to 0$ yields
+\[
+M_X'(t_0)=\lim_{h\to 0}E[q_h(X)]=E[X e^{t_0 X}].
+\]
+
+\section*{Problem 5}
+
+\subsection*{(a)}
+
+(i) For $X\sim\mathrm{Laplace}(0,1)$,
+\[
+M_X(t)=\int_{-\infty}^{\infty} e^{tx}\cdot\tfrac12 e^{-|x|}\,dx.
+\]
+For $t\in(-1,1)$ the integral splits into two convergent exponential integrals and equals $1/(1-t^2)$. For $|t|\ge 1$ one of the tails diverges. Thus
+\[
+D_X=(-1,1).
+\]
+In particular $M_X$ is finite on an open neighborhood of $0$.
+
+(ii) For $X=e^Z$ with $Z\sim N(0,1)$,
+\[
+M_X(t)=E[e^{t e^Z}].
+\]
+If $t\le 0$, then $0<e^{t e^Z}\le 1$, so $M_X(t)\le 1<\infty$. If $t>0$, then as $z\to+\infty$, $e^{t e^z}$ grows faster than any Gaussian decay: for large $A$,
+\[
+E[e^{t e^Z}]\ge\int_A^\infty e^{t e^z}\frac{1}{\sqrt{2\pi}}e^{-z^2/2}\,dz=\infty.
+\]
+Thus $D_X=(-\infty,0]$, which contains no open neighborhood of $0$. So the lognormal distribution does \emph{not} have an MGF in the usual sense.
+
+\subsection*{(b)}
+
+Since $Z\sim N(0,1)$,
+\[
+E[X^k]=E[e^{kZ}]=M_Z(k)=e^{k^2/2}<\infty.
+\]
+Finiteness of all moments does not imply finiteness of the MGF near $0$: the series $\sum t^k E[X^k]/k!$ need not have a positive radius of convergence. Here $E[X^k]=e^{k^2/2}$ grows so fast that for every $t>0$,
+\[
+\sum_{k=0}^\infty\frac{t^k}{k!}e^{k^2/2}=\infty,
+\]
+consistent with $M_X(t)=\infty$ for $t>0$.
+
+\section*{Problem 6}
+
+\subsection*{(a)}
+
+Write $X=\sum_{k=0}^\infty 1_{\{X>k\}}$. Taking expectations (nonnegative terms),
+\[
+E[X]=\sum_{k=0}^\infty P(X>k)=\sum_{k=0}^\infty\bigl(1-F_X(k)\bigr).
+\]
+
+\subsection*{(b)}
+
+For $x\ge 0$,
+\[
+\int_0^\infty 1_{\{X>x\}}\,dx = X,
+\]
+so by Tonelli/Fubini,
+\[
+E[X]=E\Bigl[\int_0^\infty 1_{\{X>x\}}\,dx\Bigr]=\int_0^\infty P(X>x)\,dx=\int_0^\infty\bigl(1-F_X(x)\bigr)\,dx.
+\]
+This is the continuous analogue of the discrete tail-sum formula in (a).
+
+\section*{Problem 7}
+
+\subsection*{(a)}
+
+Writing $a^{\underline{m}}=a(a-1)\cdots(a-m+1)$,
+\begin{align*}
+P(X=x\mid N,M,K)
+&=\frac{\binom{M}{x}\binom{N-M}{K-x}}{\binom{N}{K}}\\
+&=\binom{K}{x}\,
+\frac{M^{\underline{x}}\,(N-M)^{\underline{K-x}}}{N^{\underline{K}}}.
+\end{align*}
+Write
+\begin{align*}
+\frac{M^{\underline{x}}}{N^{\underline{x}}}
+&=\prod_{j=0}^{x-1}\frac{M/N-j/N}{1-j/N}\to p^x,\\
+\frac{(N-M)^{\underline{K-x}}}{(N-x)^{\underline{K-x}}}
+&=\prod_{j=0}^{K-x-1}\frac{1-M/N-j/N}{1-x/N-j/N}\to(1-p)^{K-x},
+\end{align*}
+as $N,M\to\infty$ with $M/N\to p$ and $K,x$ fixed. Therefore
+\[
+P(X=x\mid N,M,K)\to\binom{K}{x}p^x(1-p)^{K-x}.
+\]
+
+\subsection*{(b)}
+
+Using the same notation,
+\begin{align*}
+P(X=x\mid N,M,K)
+&=\frac{K^{\underline{x}}}{x!}\cdot\frac{M^{\underline{x}}\,(N-M)^{\underline{K-x}}}{N^{\underline{K}}}\\
+&=\frac{(KM/N)^x}{x!}
+\Biggl(\prod_{j=0}^{x-1}\frac{1-j/K}{1-j/N}\Biggr)
+\Biggl(\prod_{j=0}^{x-1}\bigl(1-j/M\bigr)\Biggr)
+\frac{(N-M)^{\underline{K-x}}}{(N-x)^{\underline{K-x}}}.
+\end{align*}
+As $N,M,K\to\infty$ with $M/N\to 0$ and $KM/N\to\lambda$ (hence also $K/N\to 0$), each finite product over $j=0,\ldots,x-1$ tends to $1$. For the remaining factor,
+\begin{align*}
+\frac{(N-M)^{\underline{K-x}}}{(N-x)^{\underline{K-x}}}
+&=\prod_{j=0}^{K-x-1}\frac{1-M/N-j/N}{1-x/N-j/N}\\
+&=\exp\Biggl(\sum_{j=0}^{K-x-1}\log\frac{1-M/N-j/N}{1-x/N-j/N}\Biggr).
+\end{align*}
+For large $N$,
+\[
+\log\frac{1-M/N-j/N}{1-x/N-j/N}=-\frac{M}{N}+O\Bigl(\frac{K}{N^2}+\frac{M^2}{N^2}\Bigr),
+\]
+uniformly in $j\le K$, so the sum equals $-(K-x)M/N+o(1)\to-\lambda$. Therefore the product tends to $e^{-\lambda}$, and
+\[
+P(X=x\mid N,M,K)\to\frac{e^{-\lambda}\lambda^x}{x!}.
+\]
+
+\section*{Problem 8}
+
+\subsection*{(a)}
+
+Let $Z\sim N(0,1)$, so $X$ has the law of $|Z|$. With the substitution $u=x^2/2$ (so $du=x\,dx$),
+\[
+E[X]=\frac{2}{\sqrt{2\pi}}\int_0^\infty x\,e^{-x^2/2}\,dx
+=\frac{2}{\sqrt{2\pi}}\int_0^\infty e^{-u}\,du
+=\frac{2}{\sqrt{2\pi}}=\sqrt{\frac{2}{\pi}},
+\]
+and $E[X^2]=E[Z^2]=1$. Hence
+\[
+\mathrm{Var}(X)=1-\frac{2}{\pi}.
+\]
+
+\subsection*{(b)}
+
+Let $Y=X^2$. The density of $X$ is $f(x)=\frac{2}{\sqrt{2\pi}}e^{-x^2/2}$ for $x>0$, so for $y>0$,
+\[
+f_Y(y)=f(\sqrt{y})\cdot\frac{1}{2\sqrt{y}}
+=\frac{2}{\sqrt{2\pi}}e^{-y/2}\cdot\frac{1}{2\sqrt{y}}
+=\frac{1}{\sqrt{2\pi}}\,y^{-1/2}e^{-y/2}
+=\frac{1}{\Gamma(1/2)\,2^{1/2}}y^{1/2-1}e^{-y/2}.
+\]
+Thus $Y\sim\mathrm{Gamma}(\alpha,\beta)$ with shape $\alpha=1/2$ and scale $\beta=2$. So $g(x)=x^2$, $\alpha=1/2$, $\beta=2$.
+
+\section*{Problem 9}
+
+\subsection*{(a)}
+
+Assume $X\sim\mathrm{Exp}(\beta)$ has density $f_X(x)=\frac1\beta e^{-x/\beta}$ for $x>0$. Let $Y=X^{1/\gamma}$ with $\gamma>0$. Then $X=Y^\gamma$ and
+\[
+f_Y(y)=f_X(y^\gamma)\cdot\gamma y^{\gamma-1}
+=\frac{\gamma}{\beta}\,y^{\gamma-1}\exp\bigl(-y^\gamma/\beta\bigr),\qquad y>0.
+\]
+This is the Weibull$(\gamma,\beta)$ density. It integrates to $1$ by the substitution $u=y^\gamma/\beta$:
+\[
+\int_0^\infty\frac{\gamma}{\beta}y^{\gamma-1}e^{-y^\gamma/\beta}\,dy=\int_0^\infty e^{-u}\,du=1.
+\]
+The mean and variance are
+\begin{align*}
+E[Y]&=\beta^{1/\gamma}\Gamma\Bigl(1+\frac1\gamma\Bigr),\\
+\mathrm{Var}(Y)&=\beta^{2/\gamma}\Biggl(\Gamma\Bigl(1+\frac2\gamma\Bigr)-\Gamma\Bigl(1+\frac1\gamma\Bigr)^2\Biggr).
+\end{align*}
+
+\subsection*{(b)}
+
+Assume $X\sim\mathrm{Gamma}(3/2,\beta)$ has density
+\[
+f_X(x)=\frac{1}{\Gamma(3/2)\,\beta^{3/2}}x^{1/2}e^{-x/\beta},\qquad x>0,
+\]
+with $\Gamma(3/2)=\sqrt{\pi}/2$. Let $Y=(X/\beta)^{1/2}$, so $X=\beta Y^2$ and $|dx/dy|=2\beta y$. Then for $y>0$,
+\begin{align*}
+f_Y(y)
+&=f_X(\beta y^2)\cdot 2\beta y
+=\frac{1}{\Gamma(3/2)\,\beta^{3/2}}(\beta y^2)^{1/2}e^{-y^2}\cdot 2\beta y
+=\frac{2}{\Gamma(3/2)}y^2 e^{-y^2}
+=\frac{4}{\sqrt{\pi}}y^2 e^{-y^2}.
+\end{align*}
+This is the Maxwell density (with the parameterization induced by the problem). Integrating in polar/Gamma coordinates, or using $Y^2\sim\mathrm{Gamma}(3/2,1)$,
+\[
+\int_0^\infty f_Y(y)\,dy=1.
+\]
+Moreover
+\[
+E[Y^2]=E[X/\beta]=\frac{(3/2)\beta}{\beta}=\frac32,
+\]
+and
+\[
+E[Y]=\int_0^\infty y\cdot\frac{4}{\sqrt{\pi}}y^2 e^{-y^2}\,dy=\frac{4}{\sqrt{\pi}}\cdot\frac12\Gamma(2)=\frac{2}{\sqrt{\pi}},
+\]
+so
+\[
+\mathrm{Var}(Y)=\frac32-\frac{4}{\pi}.
+\]
+
+\end{document}
